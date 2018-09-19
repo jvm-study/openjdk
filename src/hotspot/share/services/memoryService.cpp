@@ -19,8 +19,9 @@
  * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
  * or visit www.oracle.com if you need additional information or have any
  * questions.
- *
+ * 垃圾回收
  */
+
 
 #include "precompiled.hpp"
 #include "classfile/systemDictionary.hpp"
@@ -163,13 +164,14 @@ void MemoryService::track_memory_pool_usage(MemoryPool* pool) {
     LowMemoryDetector::detect_low_memory(pool);
   }
 }
-
+//开始GC
 void MemoryService::gc_begin(GCMemoryManager* manager, bool recordGCBeginTime,
                              bool recordAccumulatedGCTime,
                              bool recordPreGCUsage, bool recordPeakUsage) {
 
   manager->gc_begin(recordGCBeginTime, recordPreGCUsage, recordAccumulatedGCTime);
 
+  //在GC开始时跟踪内存峰值使用情况
   // Track the peak memory usage when GC begins
   if (recordPeakUsage) {
     for (int i = 0; i < _pools_list->length(); i++) {
